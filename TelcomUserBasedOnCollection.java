@@ -1,17 +1,18 @@
+//集合类模拟电信计费系统，去重和排序
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 class TelcomUserBasedOnCollection {
 	private String phoneNumber;
 	private String callTo;
-	private Vector communicationRecords;
-	private TreeSet callToNumbersSet;
-	private ArrayList callToNumbersList;
+	private LinkedList communicationRecords;
+	private TreeSet callToNumbersSet;//排序
+	private HashSet callToNumbersList;//去重
 	public TelcomUserBasedOnCollection(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-		this.communicationRecords = new Vector();
+		this.communicationRecords = new LinkedList();
 		this.callToNumbersSet = new TreeSet();
-		this.callToNumbersList = new ArrayList();
+		this.callToNumbersList = new HashSet();
 	}
 	
 	//模拟通话记录的生成
@@ -42,16 +43,8 @@ class TelcomUserBasedOnCollection {
 	
 	//随机生成被叫号码（后四位随机）并返回
 	private String getCallToPhoneNumber() {
-		//最后一位随机，人为制造一些重复。
 		return "1380372000" + String.valueOf(new Random().nextInt(10));
-		/*
-		return "1380372" + String.valueOf(new Random().nextInt(10))
-			 + String.valueOf(new Random().nextInt(10))
-			 + String.valueOf(new Random().nextInt(10))
-			 + String.valueOf(new Random().nextInt(10));
-			 */
 	}
-	
 	//模拟计费办法，以字符串的形式返回保留4位小数的计费结果
 	private String accountFee(long timeStart, long timeEnd) {
 		//每分钟收费*元
@@ -71,84 +64,13 @@ class TelcomUserBasedOnCollection {
 			System.out.println((String)callTo);
 		}
 	}
-	
 	//打印通话记录
-	void printDetails() {				
-		/*
-		 * 使用Enumeration接口遍历。注意应将communicationRecords定义为Vector
-		 */
-		Enumeration enumeration = this.communicationRecords.elements();
-		while(enumeration.hasMoreElements()) {
-			System.out.println("---------通话记录分割线---------");
-			String [] recordField = ((String)enumeration.nextElement()).split(",");
-			System.out.println("主叫：" + recordField[0]);
-			System.out.println("被叫：" + recordField[3]);
-			Date timeStart = new Date(Long.parseLong(recordField[1]));
-			Date timeEnd = new Date(Long.parseLong(recordField[2]));			
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 hh时mm分ss秒");
-			
-			//SimpleDateFormat			
-			System.out.println("通话开始时间：" + simpleDateFormat.format(timeStart));
-			System.out.println("通话结束时间：" + simpleDateFormat.format(timeEnd));
-			
-			System.out.println("计费：" 
-					+ accountFee(Long.parseLong(recordField[1]), Long.parseLong(recordField[2]))
-					+ " 元。");
-		}
-		
-		/*使用for each循环遍历
-		* 
-		for(Object aRecord:this.communicationRecords) {
-			System.out.println("---------通话记录分割线---------");
-			String [] recordField = ((String)aRecord).split(",");
-			System.out.println("主叫：" + recordField[0]);
-			System.out.println("被叫：" + recordField[3]);
-			Date timeStart = new Date(Long.parseLong(recordField[1]));
-			Date timeEnd = new Date(Long.parseLong(recordField[2]));			
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 hh时mm分ss秒");
-			
-			//SimpleDateFormat			
-			System.out.println("通话开始时间：" + simpleDateFormat.format(timeStart));
-			System.out.println("通话结束时间：" + simpleDateFormat.format(timeEnd));
-			
-			System.out.println("计费：" 
-					+ accountFee(Long.parseLong(recordField[1]), Long.parseLong(recordField[2]))
-					+ " 元。");
-		}
-		*/
-		
-		
-		/*
-		 * 使用ListIterator迭代器反向遍历
-		 * 
-		ListIterator it = this.communicationRecords.listIterator(
-				this.communicationRecords.size());
-		while(it.hasPrevious()) {
-			System.out.println("---------通话记录分割线---------");
-			String [] recordField = ((String) it.previous()).split(",");
-			System.out.println("主叫：" + recordField[0]);
-			System.out.println("被叫：" + recordField[3]);
-			Date timeStart = new Date(Long.parseLong(recordField[1]));
-			Date timeEnd = new Date(Long.parseLong(recordField[2]));			
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 hh时mm分ss秒");
-			
-			//SimpleDateFormat			
-			System.out.println("通话开始时间：" + simpleDateFormat.format(timeStart));
-			System.out.println("通话结束时间：" + simpleDateFormat.format(timeEnd));
-			
-			System.out.println("计费：" 
-					+ accountFee(Long.parseLong(recordField[1]), Long.parseLong(recordField[2]))
-					+ " 元。");
-		}
-		*/
-		
-		/*
-		 * 使用迭代器
-		 * 
+	void printDetails() {			
+		//使用迭代器
 		Iterator it = this.communicationRecords.iterator();
-		while(it.hasNext()) {
+		while(it.hasNext()){
 			System.out.println("---------通话记录分割线---------");
-			String [] recordField = ((String) it.next()).split(",");
+			String [] recordField = ((String)it.next()).split(",");
 			System.out.println("主叫：" + recordField[0]);
 			System.out.println("被叫：" + recordField[3]);
 			Date timeStart = new Date(Long.parseLong(recordField[1]));
@@ -163,30 +85,5 @@ class TelcomUserBasedOnCollection {
 					+ accountFee(Long.parseLong(recordField[1]), Long.parseLong(recordField[2]))
 					+ " 元。");
 		}
-		*/
-		
-		
-		/*使用数组
-		//获取记录数目，即communicationRecords集合中的元素个数
-		int arrayListSize = this.communicationRecords.size();
-		
-		for(int i = 0; i < arrayListSize - 1; i++) {
-			System.out.println("---------通话记录分割线---------");
-			String [] recordField = ((String) this.communicationRecords.get(i)).split(",");
-			System.out.println("主叫：" + recordField[0]);
-			System.out.println("被叫：" + recordField[3]);
-			Date timeStart = new Date(Long.parseLong(recordField[1]));
-			Date timeEnd = new Date(Long.parseLong(recordField[2]));			
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 hh时mm分ss秒");
-			
-			//SimpleDateFormat			
-			System.out.println("通话开始时间：" + simpleDateFormat.format(timeStart));
-			System.out.println("通话结束时间：" + simpleDateFormat.format(timeEnd));
-			
-			System.out.println("计费：" 
-					+ accountFee(Long.parseLong(recordField[1]), Long.parseLong(recordField[2]))
-					+ " 元。");
-		}
-		*/
 	}
 }
