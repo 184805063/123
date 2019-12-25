@@ -1,4 +1,5 @@
-package cn.itcast.application;
+package a;
+
 //用户信息
 public class User {
 	private String cardId;//银行卡号

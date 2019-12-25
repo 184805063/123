@@ -1,4 +1,4 @@
-package cn.itcast.application;
+package a;
 
 import java.util.Scanner;
 
@@ -8,10 +8,32 @@ public class Bank {
 	
 	public static void main(String[] args){
 		Bank b = new Bank();
+		b.register();
 		b.login();
 		b.operate();
 	}
-	
+	private void save(){
+		  DBUtil dbUtil=DBUtil.getInstance();
+		  dbUtil.update();
+		}
+	//注册
+	private void register(){
+		User u=new User();
+		Scanner scanner=new Scanner(System.in);
+		System.out.println("输入卡号:");
+		u.setCardId(scanner.nextLine());
+	    System.out.println("输入用户名:");
+		u.setUserName(scanner.nextLine());
+		System.out.println("输入密码:");
+		u.setCardPwd(scanner.nextLine());
+		System.out.println("输入手机号:");
+		u.setCall(scanner.nextLine());
+		System.out.println("输入余额:");
+		u.setAccount(scanner.nextInt());
+		DBUtil dbUtil=DBUtil.getInstance();
+		dbUtil.addUser(u);
+		}
+
 	/*账户金额存入、取出和查询操作*/
 	public void operate(){
 		Bank b = new Bank();
